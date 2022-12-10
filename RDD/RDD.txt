@@ -1,0 +1,65 @@
+22/12/09 22:29:35 WARN Utils: Your hostname, inf319 resolves to a loopback address: 127.0.1.1; using 192.168.4.210 instead (on interface ens33)
+22/12/09 22:29:35 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+22/12/09 22:29:47 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Spark context Web UI available at http://192.168.4.210:4040
+Spark context available as 'sc' (master = local[*], app id = local-1670639389656).
+Spark session available as 'spark'.
+22/12/09 22:29:58 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.3.1
+      /_/
+         
+Using Scala version 2.12.15 (OpenJDK 64-Bit Server VM, Java 17.0.4)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> val cadenas = Array("Docentes", "inteligenciaArtificial", "quefinal")  // Crea un Array con tres cadenas
+cadenas: Array[String] = Array(Docentes, inteligenciaArtificial, quefinal)    
+
+scala> val cadenasRDD = sc . parallelize (cadenas)                            // Convierte el array de cadenas en una colección que se puede trabajar en paralelo
+cadenasRDD: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[0] at parallelize at <console>:27
+
+scala> cadenasRDD.collect()                                                   // Recopila los datos de la colección en paralelo
+res0: Array[String] = Array(Docentes, inteligenciaArtificial, quefinal)
+
+scala> file.collect()                                                         // Iintenta recopilar los datos de un objeto "file" que no existe
+<console>:26: error: not found: value file
+       file.collect()
+       ^
+
+scala> val filtro = cadenasRDD.filter(line => line.contains("quefinal"))      // Filtra los elemenos de la colección que contienen la cadena "quefinal"
+filtro: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[1] at filter at <console>:26
+
+scala> val fileNotFound = sc.textFile("/7añljdlsjd/alkls/", 6)                // abre una referencia al archivo "/7añljdlsjd/alkls/" dentro del contexto por defecto "sc" de Spark, pero el archivo no existe
+fileNotFound: org.apache.spark.rdd.RDD[String] = /7añljdlsjd/alkls/ MapPartitionsRDD[3] at textFile at <console>:26
+
+scala> fileNotFound.collect()                                                 // Intenta recopilar los datos del un objeto "fileNotFound" que no existe
+org.apache.hadoop.mapred.InvalidInputException: Input path does not exist: file:/7añljdlsjd/alkls
+  at org.apache.hadoop.mapred.FileInputFormat.singleThreadedListStatus(FileInputFormat.java:304)
+  at org.apache.hadoop.mapred.FileInputFormat.listStatus(FileInputFormat.java:244)
+  at org.apache.hadoop.mapred.FileInputFormat.getSplits(FileInputFormat.java:332)
+  at org.apache.spark.rdd.HadoopRDD.getPartitions(HadoopRDD.scala:208)
+  at org.apache.spark.rdd.RDD.$anonfun$partitions$2(RDD.scala:292)
+  at scala.Option.getOrElse(Option.scala:189)
+  at org.apache.spark.rdd.RDD.partitions(RDD.scala:288)
+  at org.apache.spark.rdd.MapPartitionsRDD.getPartitions(MapPartitionsRDD.scala:49)
+  at org.apache.spark.rdd.RDD.$anonfun$partitions$2(RDD.scala:292)
+  at scala.Option.getOrElse(Option.scala:189)
+  at org.apache.spark.rdd.RDD.partitions(RDD.scala:288)
+  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2293)
+  at org.apache.spark.rdd.RDD.$anonfun$collect$1(RDD.scala:1021)
+  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+  at org.apache.spark.rdd.RDD.withScope(RDD.scala:406)
+  at org.apache.spark.rdd.RDD.collect(RDD.scala:1020)
+  ... 47 elided
+Caused by: java.io.IOException: Input path does not exist: file:/7añljdlsjd/alkls
+  at org.apache.hadoop.mapred.FileInputFormat.singleThreadedListStatus(FileInputFormat.java:278)
+  ... 63 more
+
+scala> 

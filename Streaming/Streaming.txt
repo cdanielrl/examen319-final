@@ -1,0 +1,44 @@
+22/12/09 22:40:50 WARN Utils: Your hostname, inf319 resolves to a loopback address: 127.0.1.1; using 192.168.4.210 instead (on interface ens33)
+22/12/09 22:40:50 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+22/12/09 22:41:01 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Spark context Web UI available at http://192.168.4.210:4040
+Spark context available as 'sc' (master = local[*], app id = local-1670640062780).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.3.1
+      /_/
+         
+Using Scala version 2.12.15 (OpenJDK 64-Bit Server VM, Java 17.0.4)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> import org.apache.spark.streaming.StreamingContext               // Import de librería necesario
+import org.apache.spark.streaming.StreamingContext
+
+scala> import org.apache.spark.streaming.dstream.ReceiverInputDStream   // Import de librería necesario
+import org.apache.spark.streaming.dstream.ReceiverInputDStream
+
+scala> import org.apache.spark.streaming.Seconds                        // Import de librería necesario
+import org.apache.spark.streaming.Seconds
+
+scala> val streamingContext: StreamingContext = new StreamingContext(sparkContext, Seconds(20)) // Creamos un contexto de Streaming, pero no existe el contexto sparkContext
+<console>:25: error: not found: value sparkContext
+       val streamingContext: StreamingContext = new StreamingContext(sparkContext, Seconds(20))
+                                                                     ^
+
+scala> val streamingContext: StreamingContext = new StreamingContext(sc, Seconds(20))     // Creamos un contexto de Streaming usando el contexto de spark generado automáticamente "sc"  que trabaja sobre lotes de datos cada 20 segundos
+streamingContext: org.apache.spark.streaming.StreamingContext = org.apache.spark.streaming.StreamingContext@481b276c
+
+scala> val lines: ReceiverInputDStream[String] = streamingContext.socketTextStream("localhost", 9999)       // Creamos un steam que recibe datos en el puerto 9999
+lines: org.apache.spark.streaming.dstream.ReceiverInputDStream[String] = org.apache.spark.streaming.dstream.SocketInputDStream@41a21205
+
+scala> lines.start()                // podemos iniciar la recolección de datos
+
+scala> lines.stop()                 // podemos detener la recolección de datos
+
+scala> 
